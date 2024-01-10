@@ -17,9 +17,9 @@ package com.kcst.sendserver.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.kcst.sendserver.model.UserInfo;
+import com.kcst.sendserver.room.ExecutorManager;
+import com.kcst.sendserver.room.RoomManager;
 import com.kcst.sendserver.util.Logger;
-import com.yanzhenjie.andserver.annotation.Addition;
-import com.yanzhenjie.andserver.annotation.CookieValue;
 import com.yanzhenjie.andserver.annotation.GetMapping;
 import com.yanzhenjie.andserver.annotation.RequestMapping;
 import com.yanzhenjie.andserver.annotation.RequestMethod;
@@ -38,9 +38,9 @@ import java.util.Map;
 class TestController {
 
     @RequestMapping(
-        path = "/connection",
-        method = {RequestMethod.GET},
-        produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            path = "/connection",
+            method = {RequestMethod.GET},
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     Object getConnection(HttpRequest request) {
         Map<String, Object> map = new HashMap<>();
         map.put("getLocalAddr", request.getLocalAddr());
@@ -56,10 +56,11 @@ class TestController {
 
     @GetMapping(path = "/userInfo", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     UserInfo userInfo() {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserId("123");
-        userInfo.setUserName("AndServer");
-        return userInfo;
+        return ExecutorManager.getInstance().submit(() -> RoomManager
+                .getInstance()
+                .getAppDatabase()
+                .getUserDao()
+                .getUserForId("123"));
     }
 
 }

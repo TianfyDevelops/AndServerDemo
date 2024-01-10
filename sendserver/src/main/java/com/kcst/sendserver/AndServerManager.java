@@ -5,7 +5,9 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.kcst.sendserver.util.Logger;
+import com.kcst.sendserver.model.UserInfo;
+import com.kcst.sendserver.room.ExecutorManager;
+import com.kcst.sendserver.room.RoomManager;
 import com.yanzhenjie.andserver.AndServer;
 import com.yanzhenjie.andserver.Server;
 
@@ -38,6 +40,17 @@ public class AndServerManager {
         this.port = port;
         this.timeout = timeout;
         this.timeUnit = timeUnit;
+        initRoom();
+    }
+
+    private void initRoom() {
+        ExecutorManager.getInstance().submit(() -> {
+            RoomManager.getInstance().init(context);
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUserId("123");
+            userInfo.setUserName("AndServer");
+            RoomManager.getInstance().getAppDatabase().getUserDao().insertUser(userInfo);
+        });
     }
 
     /**

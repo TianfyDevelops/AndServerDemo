@@ -18,28 +18,42 @@ package com.kcst.sendserver.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * Created by Zhenjie Yan on 2018/6/9.
  */
+
+@Entity
 public class UserInfo implements Parcelable {
 
+
+    @JSONField(name = "id")
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     @JSONField(name = "userId")
+    @ColumnInfo
     private String mUserId;
     @JSONField(name = "userName")
+    @ColumnInfo
     private String mUserName;
 
     public UserInfo() {
     }
 
     protected UserInfo(Parcel in) {
+        id = in.readInt();
         mUserId = in.readString();
         mUserName = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(mUserId);
         dest.writeString(mUserName);
     }
@@ -60,6 +74,14 @@ public class UserInfo implements Parcelable {
             return new UserInfo[size];
         }
     };
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getUserId() {
         return mUserId;
