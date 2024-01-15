@@ -10,26 +10,35 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.kcst.sendserver.model.UserInfo;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     private final String TAG = "MainActivity";
+    ExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    private RetrofitService service;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -53,26 +62,37 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        RetrofitService service = retrofit.create(RetrofitService.class);
-        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        service = retrofit.create(RetrofitService.class);
+        findViewById(R.id.btn_test).setOnClickListener(this);
 
-        findViewById(R.id.btn_test).setOnClickListener(v -> {
-            scheduledExecutorService.execute(() -> {
-                Call<UserInfo> userInfo = service.getUserInfo();
-                try {
-                    Response<UserInfo> response = userInfo.execute();
-                    Log.d(MainActivity.class.getSimpleName(), response.toString());
-                    if (response.isSuccessful()) {
-                        TextView textView = findViewById(R.id.tv_test);
-                        textView.setText(response.toString());
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
 
-            });
 
-        });
+//        findViewById(R.id.btn_test).setOnClickListener(v -> {
+//            Future<Response<BaseData<UserInfo>>> responseFuture = executorService.submit(() -> {
+//                Call<BaseData<UserInfo>> userInfo = service.getUserInfo();
+//                try {
+//                    Response<BaseData<UserInfo>> response = userInfo.execute();
+//                    Log.d(MainActivity.class.getSimpleName(), response.toString());
+//                    return response;
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                return null;
+//            });
+//            try {
+//                Response<BaseData<UserInfo>> response = responseFuture.get();
+//
+//                if (response.isSuccessful()) {
+//                    TextView textView = findViewById(R.id.tv_test);
+//                    textView.setText(response.body().toString());
+//                }
+//            } catch (ExecutionException e) {
+//                throw new RuntimeException(e);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//        });
     }
 
     private void bindServer() {
@@ -91,4 +111,30 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_test:{
+                requestUserInfo();
+            }
+        }
+    }
+
+    private void requestUserInfo(){
+        Call<String> stringCall = service.get("/user/userInfo");
+
+        stringCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.i(TAG, response.toString());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+    }
+
 }

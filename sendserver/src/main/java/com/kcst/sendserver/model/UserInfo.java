@@ -98,4 +98,13 @@ public class UserInfo implements Parcelable {
     public void setUserName(String userName) {
         this.mUserName = userName;
     }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "id=" + id +
+                ", mUserId='" + mUserId + '\'' +
+                ", mUserName='" + mUserName + '\'' +
+                '}';
+    }
 }

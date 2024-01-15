@@ -3,7 +3,6 @@ package com.kcst.sendserver.room;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
@@ -12,6 +11,7 @@ import java.util.concurrent.Future;
  */
 public class ExecutorManager {
     private static volatile ExecutorManager INSTANCE;
+
     public static ExecutorManager getInstance() {
         if (INSTANCE == null) {
             synchronized (ExecutorManager.class) {
@@ -25,7 +25,8 @@ public class ExecutorManager {
 
     private ExecutorManager() {
     }
-    private ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+    private ExecutorService executorService = new ServerThreadPool.Builder().build();
 
     public <T> T submit(Callable<T> callable) {
         Future<T> submit = executorService.submit(callable);
@@ -39,6 +40,9 @@ public class ExecutorManager {
 
     public void submit(Runnable runnable) {
         executorService.submit(runnable);
+    }
+    public void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 
 }
