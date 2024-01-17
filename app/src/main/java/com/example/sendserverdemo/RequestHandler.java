@@ -1,5 +1,7 @@
 package com.example.sendserverdemo;
 
+import java.io.IOException;
+
 public interface RequestHandler {
-    <T> BaseResponse<T> requestHandler(RetrofitService retrofitService, BaseRequest baseRequest, BaseResponse<T> baseResponse);
+    <ResponseT> ResponseT requestHandler(RetrofitService retrofitService, BaseRequest baseRequest, Class<ResponseT> baseResponse) throws IOException;
 }

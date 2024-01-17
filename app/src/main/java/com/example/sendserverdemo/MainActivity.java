@@ -1,6 +1,8 @@
 package com.example.sendserverdemo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
@@ -25,12 +27,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final String TAG = "MainActivity";
     private RetrofitService service;
+    private MainViewModel mainViewModel;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         bindServer();
         service = RetrofitManager.getRetrofit().create(RetrofitService.class);
@@ -62,7 +68,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 requestUserInfo();
                 break;
             case R.id.btn_set_user_info:
-                requestSetUserInfo();
+//                requestSetUserInfo();
+                mainViewModel.setUserInfo();
                 break;
         }
     }
