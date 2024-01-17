@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private final String TAG = "MainActivity";
-    ExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private RetrofitService service;
 
     @SuppressLint("MissingInflatedId")
@@ -47,52 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         bindServer();
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
-                .connectTimeout(5000, TimeUnit.MILLISECONDS)
-                .readTimeout(5000, TimeUnit.MILLISECONDS)
-                .writeTimeout(5000, TimeUnit.MILLISECONDS)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.89:8080/")
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        service = retrofit.create(RetrofitService.class);
+        service = RetrofitManager.INSTANCE.getRetrofit().create(RetrofitService.class);
         findViewById(R.id.btn_test).setOnClickListener(this);
-
-
-
-//        findViewById(R.id.btn_test).setOnClickListener(v -> {
-//            Future<Response<BaseData<UserInfo>>> responseFuture = executorService.submit(() -> {
-//                Call<BaseData<UserInfo>> userInfo = service.getUserInfo();
-//                try {
-//                    Response<BaseData<UserInfo>> response = userInfo.execute();
-//                    Log.d(MainActivity.class.getSimpleName(), response.toString());
-//                    return response;
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            });
-//            try {
-//                Response<BaseData<UserInfo>> response = responseFuture.get();
-//
-//                if (response.isSuccessful()) {
-//                    TextView textView = findViewById(R.id.tv_test);
-//                    textView.setText(response.body().toString());
-//                }
-//            } catch (ExecutionException e) {
-//                throw new RuntimeException(e);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//        });
     }
 
     private void bindServer() {
@@ -114,15 +69,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btn_test:{
+        switch (v.getId()) {
+            case R.id.btn_test: {
                 requestUserInfo();
             }
         }
     }
 
-    private void requestUserInfo(){
-        Call<String> stringCall = service.get("/user/userInfo");
+    private void requestUserInfo() {
+        Call<String> stringCall = service.get(null,"/user/userInfo",null);
 
         stringCall.enqueue(new Callback<String>() {
             @Override

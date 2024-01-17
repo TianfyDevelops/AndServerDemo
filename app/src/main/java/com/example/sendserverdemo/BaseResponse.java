@@ -1,13 +1,13 @@
 package com.example.sendserverdemo;
 
-public class BaseData<T> {
-    private boolean isSuccess;
+public class BaseResponse<T> {
+    public boolean isSuccess;
 
-    private int errorCode;
+    public int errorCode;
 
-    private String errorMsg;
+    public String errorMsg;
 
-    private T data;
+    public T data;
 
     @Override
     public String toString() {
