@@ -15,7 +15,7 @@ public class PostRequestHandler implements RequestHandler {
         Call<String> post = retrofitService.post(baseRequest.path, baseRequest.requestParams);
         Response<String> execute = post.execute();
         if (execute.isSuccessful()){
-            ResponseT responseT = new Gson().fromJson(new StringReader(execute.body()), baseResponse);
+            return new Gson().fromJson(new StringReader(execute.body()), baseResponse);
         }
         return null;
     }
