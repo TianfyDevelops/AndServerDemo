@@ -3,6 +3,7 @@ package com.kcst.sendserver.room.dao;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.kcst.sendserver.model.UserInfo;
 
@@ -19,6 +20,7 @@ public interface UserDao {
 
     @Insert(entity = UserInfo.class)
     void insertUser(UserInfo userInfo);
-
+    @Update(entity = UserInfo.class)
+    void upDateUser(UserInfo userInfo);
 
 }

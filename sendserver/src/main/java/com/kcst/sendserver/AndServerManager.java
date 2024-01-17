@@ -11,6 +11,7 @@ import com.kcst.sendserver.room.RoomManager;
 import com.yanzhenjie.andserver.AndServer;
 import com.yanzhenjie.andserver.Server;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,10 +47,15 @@ public class AndServerManager {
     private void initRoom() {
         ExecutorManager.getInstance().submit(() -> {
             RoomManager.getInstance().init(context);
-            UserInfo userInfo = new UserInfo();
-            userInfo.setUserId("123");
-            userInfo.setUserName("AndServer");
-            RoomManager.getInstance().getAppDatabase().getUserDao().insertUser(userInfo);
+
+            List<UserInfo> allUser = RoomManager.getInstance().getAppDatabase().getUserDao().getAllUser();
+            if (allUser.isEmpty()) {
+                UserInfo userInfo = new UserInfo();
+                userInfo.setId(1);
+                userInfo.setUserId("123");
+                userInfo.setUserName("AndServer");
+                RoomManager.getInstance().getAppDatabase().getUserDao().insertUser(userInfo);
+            }
         });
     }
 

@@ -1,11 +1,10 @@
 package com.example.sendserverdemo;
 
-import retrofit2.Call;
 
 public class AccessServerManager {
-    public static volatile AccessServerManager INSTANCE;
+    private static volatile AccessServerManager INSTANCE;
 
-    public AccessServerManager getInstance() {
+    public static AccessServerManager getInstance() {
         if (INSTANCE == null) {
             synchronized (AccessServerManager.class) {
                 if (INSTANCE == null) {
@@ -19,7 +18,7 @@ public class AccessServerManager {
     private RetrofitService retrofitService;
 
     private AccessServerManager() {
-        retrofitService = RetrofitManager.INSTANCE.getRetrofit().create(RetrofitService.class);
+        retrofitService = RetrofitManager.getRetrofit().create(RetrofitService.class);
     }
 
 

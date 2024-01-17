@@ -11,11 +11,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitManager {
 
-    public static volatile RetrofitManager INSTANCE;
+    private static volatile RetrofitManager INSTANCE;
 
-    private final String DEFAULT_URL = "http://192.168.1.89:8080/";
+    private static final String DEFAULT_URL = "http://192.168.1.89:8080/";
 
-    public RetrofitManager getInstance() {
+    public static RetrofitManager getInstance() {
         if (INSTANCE == null) {
             synchronized (RetrofitManager.class) {
                 if (INSTANCE == null) {
@@ -29,13 +29,13 @@ public class RetrofitManager {
     private RetrofitManager() {
     }
 
-    private Retrofit retrofit;
+    private static Retrofit retrofit;
 
     /**
      * 初始化Retrofit
      * @param baseUrl endIndex must "/"
      */
-    public void initRetrofit(String baseUrl) {
+    public static void initRetrofit(String baseUrl) {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -52,7 +52,7 @@ public class RetrofitManager {
                 .build();
     }
 
-    public Retrofit getRetrofit() {
+    public static Retrofit getRetrofit() {
         if (retrofit != null) {
             return retrofit;
         } else {

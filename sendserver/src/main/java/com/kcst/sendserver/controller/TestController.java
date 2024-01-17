@@ -21,8 +21,10 @@ import com.kcst.sendserver.room.ExecutorManager;
 import com.kcst.sendserver.room.RoomManager;
 import com.kcst.sendserver.util.Logger;
 import com.yanzhenjie.andserver.annotation.GetMapping;
+import com.yanzhenjie.andserver.annotation.PostMapping;
 import com.yanzhenjie.andserver.annotation.RequestMapping;
 import com.yanzhenjie.andserver.annotation.RequestMethod;
+import com.yanzhenjie.andserver.annotation.RequestParam;
 import com.yanzhenjie.andserver.annotation.RestController;
 import com.yanzhenjie.andserver.http.HttpRequest;
 import com.yanzhenjie.andserver.util.MediaType;
@@ -61,6 +63,17 @@ class TestController {
                 .getAppDatabase()
                 .getUserDao()
                 .getUserForId("123"));
+    }
+
+    @PostMapping(path = "/userInfo", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    void setUserInfo(@RequestParam("userId") String userId, @RequestParam("userName") String userName) {
+        ExecutorManager.getInstance().submit(() -> {
+            UserInfo userInfo = new UserInfo();
+            userInfo.setId(1);
+            userInfo.setUserId(userId);
+            userInfo.setUserName(userName);
+            RoomManager.getInstance().getAppDatabase().getUserDao().upDateUser(userInfo);
+        });
     }
 
 }
