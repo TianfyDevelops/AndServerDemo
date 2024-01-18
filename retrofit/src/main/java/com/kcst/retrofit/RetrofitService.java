@@ -1,7 +1,4 @@
-package com.example.sendserverdemo;
-
-
-import org.jetbrains.annotations.Nullable;
+package com.kcst.retrofit;
 
 import java.util.Map;
 
@@ -21,6 +18,6 @@ public interface RetrofitService {
 
     @FormUrlEncoded
     @POST("{path}")
-    Call<String> post(@Path(value = "path", encoded = true) String path, @FieldMap Map<String, String> map);
+    Call<String> post(@HeaderMap Map<String, String> headers,@Path(value = "path", encoded = true) String path, @FieldMap Map<String, String> map);
 
 }

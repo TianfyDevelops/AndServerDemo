@@ -1,4 +1,4 @@
-package com.example.sendserverdemo;
+package com.kcst.retrofit;
 
 import java.util.Map;
 
@@ -59,7 +59,7 @@ public class BaseRequest {
                 '}';
     }
 
-    enum RequestType {
+    public enum RequestType {
 
         GET,
         POST

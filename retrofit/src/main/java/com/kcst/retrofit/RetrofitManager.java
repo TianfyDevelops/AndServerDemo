@@ -1,4 +1,4 @@
-package com.example.sendserverdemo;
+package com.kcst.retrofit;
 
 import android.text.TextUtils;
 
@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitManager {
 
@@ -29,13 +29,13 @@ public class RetrofitManager {
     private RetrofitManager() {
     }
 
-    private static Retrofit retrofit;
+    private Retrofit retrofit;
 
     /**
      * 初始化Retrofit
      * @param baseUrl endIndex must "/"
      */
-    public static void initRetrofit(String baseUrl) {
+    public void initRetrofit(String baseUrl) {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -48,11 +48,11 @@ public class RetrofitManager {
         retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
     }
 
-    public static Retrofit getRetrofit() {
+    public Retrofit getRetrofit() {
         if (retrofit != null) {
             return retrofit;
         } else {

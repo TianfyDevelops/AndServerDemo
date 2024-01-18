@@ -1,21 +1,18 @@
-package com.example.sendserverdemo;
+package com.kcst.retrofit;
 
-public class BaseResponse<T> {
+public class BaseResponse{
     public boolean isSuccess;
 
     public int errorCode;
 
     public String errorMsg;
 
-    public T data;
-
     @Override
     public String toString() {
-        return "BaseData{" +
+        return "BaseResponse{" +
                 "isSuccess=" + isSuccess +
                 ", errorCode=" + errorCode +
                 ", errorMsg='" + errorMsg + '\'' +
-                ", data=" + data +
                 '}';
     }
 }
