@@ -3,7 +3,6 @@ package com.kcst.retrofit
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.jetbrains.annotations.NotNull
 
 class AccessServerManager private constructor() {
 
@@ -15,7 +14,7 @@ class AccessServerManager private constructor() {
     suspend fun <T> request(
         baseRequest: BaseRequest,
         responseTClass: Class<T>
-    ): T {
+    ): Result<T> {
         val requestHandler: RequestHandler = when (baseRequest.requestType) {
             BaseRequest.RequestType.GET -> GetRequestHandler()
             BaseRequest.RequestType.POST -> PostRequestHandler()

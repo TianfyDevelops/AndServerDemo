@@ -72,16 +72,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.btn_get_user_info -> {
-//                viewModel.getUserInfo()
-                val testRetrofitService = retrofit.create(TestRetrofitService::class.java)
-                CoroutineScope(SupervisorJob()+Dispatchers.IO).launch{
-                    val response = testRetrofitService.userInfo.execute()
-                    if (response.isSuccessful){
-
-
-
-                    }
-                }
+                viewModel.getUserInfo()
+//                val testRetrofitService = retrofit.create(TestRetrofitService::class.java)
+//                CoroutineScope(SupervisorJob()+Dispatchers.IO).launch{
+//                    val response = testRetrofitService.userInfo.execute()
+//                    if (response.isSuccessful){
+//
+//
+//
+//                    }
+//                }
 
 
             }

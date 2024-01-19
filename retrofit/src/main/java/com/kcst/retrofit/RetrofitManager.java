@@ -13,7 +13,7 @@ public class RetrofitManager {
 
     private static volatile RetrofitManager INSTANCE;
 
-    private static final String DEFAULT_URL = "http://192.168.1.89:8080/";
+    private static final String DEFAULT_URL = "http://192.168.1.89:8081/";
 
     public static RetrofitManager getInstance() {
         if (INSTANCE == null) {

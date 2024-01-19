@@ -22,6 +22,3 @@ import com.kcst.sendserver.model.UserInfo;
 /**
  * Created by Zhenjie Yan on 2018/6/9.
  */
-public class UserInfoResponse extends BaseResponse {
-    public UserInfo data;
-}

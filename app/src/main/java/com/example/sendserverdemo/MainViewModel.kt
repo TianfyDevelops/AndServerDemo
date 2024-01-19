@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kcst.retrofit.AccessServerManager
 import com.kcst.retrofit.BaseRequest
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -18,9 +19,13 @@ class MainViewModel : ViewModel() {
             }
             val response = AccessServerManager.INSTANCE.request(
                 baseRequest,
-                UserInfoResponse().javaClass
+                UserInfo::class.java
             )
-            Log.d("viewModel", response.data.toString())
+            if (response.isSuccess) {
+                Log.d("viewModel", response.data.toString())
+            }else{
+                Log.d("viewModel", response.message)
+            }
         }
     }
 
@@ -39,9 +44,9 @@ class MainViewModel : ViewModel() {
 
             val response = AccessServerManager.INSTANCE.request(
                 baseRequest,
-                UserInfoResponse().javaClass
+                UserInfo::class.java
             )
-            Log.d("viewModel", response.toString())
+//            Log.d("viewModel", response.toString())
 
         }
 
