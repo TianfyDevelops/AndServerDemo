@@ -27,17 +27,14 @@ public class GetRequestHandler implements RequestHandler {
             baseRequest.headers.put("Content-Type", "application/x-www-form-urlencoded");
         }
         HashMap<String, String> requestParams = new HashMap<>();
-        if (baseRequest.getData()!=null){
-            Type genericSuperclass = baseRequest.getClass().getGenericSuperclass();
-            if (genericSuperclass instanceof ParameterizedType){
-                Type[] actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
-                Class actualTypeArgument = (Class) actualTypeArguments[0];
-                Constructor declaredConstructor = actualTypeArgument.getDeclaredConstructor();
-                declaredConstructor.setAccessible(true);
-                Field[] fields = actualTypeArgument.getFields();
-                for (Field field : fields) {
-                    requestParams.put(field.getName(), Objects.requireNonNull(field.get(declaredConstructor.newInstance())).toString());
-                }
+        if (baseRequest.getData() != null) {
+            Class<?> aClass = baseRequest.getData().getClass();
+            Field[] declaredFields = aClass.getDeclaredFields();
+            Constructor declaredConstructor = aClass.getDeclaredConstructor();
+            declaredConstructor.setAccessible(true);
+            for (Field field : declaredFields) {
+                field.setAccessible(true);
+                requestParams.put(field.getName(), Objects.requireNonNull(field.get(baseRequest.getData())).toString());
             }
         }
         try {

@@ -66,7 +66,7 @@ class TestController {
     }
 
     @PostMapping(path = "/userInfo", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    void setUserInfo(@RequestParam("userId") String userId, @RequestParam("userName") String userName) {
+    void setUserInfo(@RequestParam("mUserId") String userId, @RequestParam("mUserName") String userName) {
         ExecutorManager.getInstance().submit(() -> {
             UserInfo userInfo = new UserInfo();
             userInfo.setId(1);

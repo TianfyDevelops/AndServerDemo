@@ -1,5 +1,7 @@
 package com.kcst.retrofit;
 
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -7,10 +9,12 @@ import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Properties;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -28,17 +32,14 @@ public class PostRequestHandler implements RequestHandler {
             baseRequest.headers.put("Content-Type", "application/x-www-form-urlencoded");
         }
         HashMap<String, String> requestParams = new HashMap<>();
-        if (baseRequest.getData()!=null){
-            Type genericSuperclass = baseRequest.getClass().getGenericSuperclass();
-            if (genericSuperclass instanceof ParameterizedType){
-                Type[] actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
-                Class actualTypeArgument = (Class) actualTypeArguments[0];
-                Constructor declaredConstructor = actualTypeArgument.getDeclaredConstructor();
-                declaredConstructor.setAccessible(true);
-                Field[] fields = actualTypeArgument.getFields();
-                for (Field field : fields) {
-                    requestParams.put(field.getName(), Objects.requireNonNull(field.get(declaredConstructor.newInstance())).toString());
-                }
+        if (baseRequest.getData() != null) {
+            Class<?> aClass = baseRequest.getData().getClass();
+            Field[] declaredFields = aClass.getDeclaredFields();
+            Constructor declaredConstructor = aClass.getDeclaredConstructor();
+            declaredConstructor.setAccessible(true);
+            for (Field field : declaredFields) {
+                field.setAccessible(true);
+                requestParams.put(field.getName(), Objects.requireNonNull(field.get(baseRequest.getData())).toString());
             }
         }
         try {
@@ -46,7 +47,7 @@ public class PostRequestHandler implements RequestHandler {
             Response<String> response = post.execute();
             if (response.isSuccessful()) {
                 BaseResponse<T> baseResponse = gson.fromJson(new StringReader(response.body()), BaseResponse.class);
-                return Result.success(baseResponse.isSuccess,baseResponse.errorCode, baseResponse.data, baseResponse.errorMsg);
+                return Result.success(baseResponse.isSuccess, baseResponse.errorCode, baseResponse.data, baseResponse.errorMsg);
             } else {
                 return Result.error(response.code(), response.message());
             }

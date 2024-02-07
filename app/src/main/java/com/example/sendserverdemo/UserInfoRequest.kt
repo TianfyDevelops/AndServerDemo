@@ -2,7 +2,6 @@ package com.example.sendserverdemo
 
 import com.kcst.retrofit.AccessServerManager
 import com.kcst.retrofit.BaseRequest
-import com.kcst.retrofit.BaseResponse
 import com.kcst.retrofit.Result
 
 /**
@@ -10,26 +9,26 @@ import com.kcst.retrofit.Result
  * @Date
  *
  */
-class UserInfoRequest : BaseRequest<UserInfo>() {
+class UserInfoRequest : BaseRequest<UserInfoParams>() {
 
 
-    suspend fun requestPost(): Result<UserInfoResponse> {
-        val userInfo = UserInfo(id = 1, mUserId = "123", mUserName = "123")
+    suspend fun requestPost(): Result<UserInfo> {
+        val userInfo = UserInfoParams(id = 1, mUserId = "123", mUserName = "123")
         setData(userInfo)
         setPath("/user/userInfo")
         setRequestType(RequestType.POST)
         return AccessServerManager.INSTANCE.request(
             this,
-            UserInfoResponse::class.java
+            UserInfo::class.java
         )
     }
 
-    suspend fun requestGet(): Result<UserInfoResponse> {
+    suspend fun requestGet(): Result<UserInfo> {
         setPath("/user/userInfo")
         setRequestType(RequestType.GET)
         return AccessServerManager.INSTANCE.request(
             this,
-            UserInfoResponse::class.java
+            UserInfo::class.java
         )
     }
 }
