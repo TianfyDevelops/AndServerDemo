@@ -2,14 +2,14 @@ package com.kcst.retrofit;
 
 import java.util.Map;
 
-public class BaseRequest {
+public class BaseRequest<R> {
     public Map<String, String> headers;
 
     public RequestType requestType;
 
     public String path;
 
-    public Map<String, String> requestParams;
+    public R data;
 
 
     public BaseRequest() {
@@ -41,13 +41,14 @@ public class BaseRequest {
         this.path = path;
     }
 
-    public Map<String, String> getRequestParams() {
-        return requestParams;
+    public R getData() {
+        return data;
     }
 
-    public void setRequestParams(Map<String, String> requestParams) {
-        this.requestParams = requestParams;
+    public void setData(R data) {
+        this.data = data;
     }
+
 
     @Override
     public String toString() {
@@ -55,7 +56,7 @@ public class BaseRequest {
                 "headers=" + headers +
                 ", requestType=" + requestType +
                 ", path='" + path + '\'' +
-                ", requestParams=" + requestParams +
+                ", data=" + data +
                 '}';
     }
 

@@ -9,6 +9,6 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        RetrofitManager.getInstance().initRetrofit("");
+        RetrofitManager.getInstance().initRetrofit("http://192.168.1.112:8080/");
     }
 }

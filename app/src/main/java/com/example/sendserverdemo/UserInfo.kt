@@ -1,6 +1,5 @@
 package com.example.sendserverdemo
 
-import com.kcst.retrofit.BaseResponse
 
-data class UserInfo(val id: Int, val mUserId: String, val mUserName: String) :
-    BaseResponse<UserInfo>()
+
+data class UserInfo @JvmOverloads constructor(val id: Int = 1, val mUserId: String = "", val mUserName: String = "")
