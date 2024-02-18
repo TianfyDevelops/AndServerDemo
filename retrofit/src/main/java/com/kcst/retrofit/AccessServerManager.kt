@@ -11,10 +11,10 @@ class AccessServerManager private constructor() {
 
     private val gson = Gson()
 
-    suspend fun <R,T> request(
+    suspend fun <R,T :BaseResponse<*>> request(
         baseRequest: BaseRequest<R>,
         responseTClass: Class<T>
-    ): Result<T> {
+    ): T {
         val requestHandler: RequestHandler = when (baseRequest.requestType) {
             BaseRequest.RequestType.GET -> GetRequestHandler()
             BaseRequest.RequestType.POST -> PostRequestHandler()

@@ -22,7 +22,7 @@ import retrofit2.Response;
 public class PostRequestHandler implements RequestHandler {
 
     @Override
-    public <T> Result<T> requestHandler(RetrofitService retrofitService,
+    public <T extends BaseResponse> T requestHandler(RetrofitService retrofitService,
                                         BaseRequest baseRequest,
                                         Class<T> responseClazz,
                                         Gson gson) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
@@ -42,17 +42,26 @@ public class PostRequestHandler implements RequestHandler {
                 requestParams.put(field.getName(), Objects.requireNonNull(field.get(baseRequest.getData())).toString());
             }
         }
+        T baseResponse;
         try {
             Call<String> post = retrofitService.post(baseRequest.headers, baseRequest.path, requestParams);
             Response<String> response = post.execute();
             if (response.isSuccessful()) {
-                BaseResponse<T> baseResponse = gson.fromJson(new StringReader(response.body()), BaseResponse.class);
-                return Result.success(baseResponse.isSuccess, baseResponse.errorCode, baseResponse.data, baseResponse.errorMsg);
+                Type genericSuperclass = responseClazz.getGenericSuperclass();
+                baseResponse = gson.fromJson(new StringReader(response.body()),genericSuperclass);
             } else {
-                return Result.error(response.code(), response.message());
+                baseResponse = responseClazz.newInstance();
+                baseResponse.isSuccess=false;
+                baseResponse.errorCode=response.code();
+                baseResponse.errorMsg=response.message();
             }
+            return baseResponse;
         } catch (Exception e) {
-            return Result.error(501, e.getMessage());
+            baseResponse = responseClazz.newInstance();
+            baseResponse.isSuccess=false;
+            baseResponse.errorCode=501;
+            baseResponse.errorMsg=e.getMessage();
+            return baseResponse;
         }
 
     }

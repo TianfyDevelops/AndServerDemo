@@ -12,23 +12,23 @@ import com.kcst.retrofit.Result
 class UserInfoRequest : BaseRequest<UserInfoParams>() {
 
 
-    suspend fun requestPost(): Result<UserInfo> {
+    suspend fun requestPost(): UserInfoResponse {
         val userInfo = UserInfoParams(id = 1, mUserId = "123", mUserName = "123")
         setData(userInfo)
         setPath("/user/userInfo")
         setRequestType(RequestType.POST)
         return AccessServerManager.INSTANCE.request(
             this,
-            UserInfo::class.java
+            UserInfoResponse::class.java
         )
     }
 
-    suspend fun requestGet(): Result<UserInfo> {
+    suspend fun requestGet(): UserInfoResponse {
         setPath("/user/userInfo")
         setRequestType(RequestType.GET)
         return AccessServerManager.INSTANCE.request(
             this,
-            UserInfo::class.java
+            UserInfoResponse::class.java
         )
     }
 }

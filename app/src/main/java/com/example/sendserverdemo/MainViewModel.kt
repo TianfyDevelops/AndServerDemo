@@ -14,7 +14,7 @@ class MainViewModel : ViewModel() {
             if (response.isSuccess) {
                 Log.d("viewModel", response.data.toString())
             } else {
-                Log.d("viewModel", response.message)
+                Log.d("viewModel", response.errorMsg)
             }
         }
     }
