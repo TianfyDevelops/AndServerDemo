@@ -19,6 +19,18 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun getUserInfos() {
+        viewModelScope.launch {
+            val userInfoRequest = UserInfoRequest()
+            val response = userInfoRequest.requestGetUserInfos()
+            if (response.isSuccess) {
+                Log.d("viewModel", response.data.toString())
+            } else {
+                Log.d("viewModel", response.errorMsg)
+            }
+        }
+    }
+
 
     fun setUserInfo() {
         viewModelScope.launch {

@@ -29,7 +29,9 @@ import com.yanzhenjie.andserver.annotation.RestController;
 import com.yanzhenjie.andserver.http.HttpRequest;
 import com.yanzhenjie.andserver.util.MediaType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,5 +77,14 @@ class TestController {
             RoomManager.getInstance().getAppDatabase().getUserDao().upDateUser(userInfo);
         });
     }
+
+    @GetMapping(path = "/userInfos", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    List<UserInfo> getUserInfos() {
+        ArrayList<UserInfo> objects = new ArrayList<>();
+        objects.add(new UserInfo(1, "1", "1"));
+        objects.add(new UserInfo(2, "2", "2"));
+        return objects;
+    }
+
 
 }

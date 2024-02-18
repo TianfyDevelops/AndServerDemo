@@ -2,7 +2,6 @@ package com.example.sendserverdemo
 
 import com.kcst.retrofit.AccessServerManager
 import com.kcst.retrofit.BaseRequest
-import com.kcst.retrofit.Result
 
 /**
  * @Author tianfy
@@ -29,6 +28,15 @@ class UserInfoRequest : BaseRequest<UserInfoParams>() {
         return AccessServerManager.INSTANCE.request(
             this,
             UserInfoResponse::class.java
+        )
+    }
+
+    suspend fun requestGetUserInfos(): UserInfosResponse {
+        setPath("/user/userInfos")
+        setRequestType(RequestType.GET)
+        return AccessServerManager.INSTANCE.request(
+            this,
+            UserInfosResponse::class.java
         )
     }
 }

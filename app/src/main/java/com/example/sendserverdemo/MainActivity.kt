@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         bindServer()
         findViewById<View>(R.id.btn_get_user_info).setOnClickListener(this)
         findViewById<View>(R.id.btn_set_user_info).setOnClickListener(this)
+        findViewById<View>(R.id.btn_get_user_infos).setOnClickListener(this)
         initRetrofit()
     }
     fun initRetrofit() {
@@ -88,6 +89,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             R.id.btn_set_user_info -> {
                 viewModel.setUserInfo()
+            }
+            R.id.btn_get_user_infos->{
+                viewModel.getUserInfos()
+
             }
         }
     }
