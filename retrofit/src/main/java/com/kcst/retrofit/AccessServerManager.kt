@@ -7,20 +7,23 @@ import kotlinx.coroutines.withContext
 class AccessServerManager private constructor() {
 
     private val retrofitService: RetrofitService =
-        RetrofitManager.getInstance().retrofit.create(RetrofitService::class.java)
+        RetrofitManager.INSTANCE.retrofit.create(RetrofitService::class.java)
 
     private val gson = Gson()
 
-    suspend fun <R,T :BaseResponse<*>> request(
+    suspend fun <R,T> request(
         baseRequest: BaseRequest<R>,
-        responseTClass: Class<T>
-    ): T {
-        val requestHandler: RequestHandler = when (baseRequest.requestType) {
+        baseResponse: BaseResponse<T>
+    ): T? {
+        val requestHandler: RequestHandler = when (baseRequest.getRequestType()) {
             BaseRequest.RequestType.GET -> GetRequestHandler()
             BaseRequest.RequestType.POST -> PostRequestHandler()
+            else -> {
+                GetRequestHandler()
+            }
         }
         return withContext(Dispatchers.IO) {
-            requestHandler.requestHandler(retrofitService, baseRequest, responseTClass, gson)
+            requestHandler.requestHandler(retrofitService, baseRequest, baseResponse, gson)
         }
     }
 

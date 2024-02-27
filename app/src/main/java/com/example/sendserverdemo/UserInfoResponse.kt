@@ -7,4 +7,4 @@ import com.kcst.retrofit.BaseResponse
  * @Date
  *
  */
-class UserInfoResponse : BaseResponse<UserInfo>()
+class UserInfoResponse(override var data: UserInfo) : BaseResponse<UserInfo>()

@@ -1,63 +1,44 @@
-package com.kcst.retrofit;
+package com.kcst.retrofit
 
-import android.text.TextUtils;
+import android.text.TextUtils
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.TimeUnit
 
-import java.util.concurrent.TimeUnit;
+class RetrofitManager private constructor() {
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
-
-public class RetrofitManager {
-
-    private static volatile RetrofitManager INSTANCE;
-
-    private static final String DEFAULT_URL = "http://192.168.1.89:8080/";
-
-    public static RetrofitManager getInstance() {
-        if (INSTANCE == null) {
-            synchronized (RetrofitManager.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new RetrofitManager();
-                }
-            }
-        }
-        return INSTANCE;
+    companion object {
+        val INSTANCE = SingleHolder.holder
+        const val DEFAULT_URL="192.168.1.122"
     }
 
-    private RetrofitManager() {
+    private object SingleHolder {
+        val holder = RetrofitManager()
     }
 
-    private Retrofit retrofit;
+
+    lateinit var retrofit: Retrofit
 
     /**
      * 初始化Retrofit
      * @param baseUrl endIndex must "/"
      */
-    public void initRetrofit(String baseUrl) {
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
-                .connectTimeout(5000, TimeUnit.MILLISECONDS)
-                .readTimeout(5000, TimeUnit.MILLISECONDS)
-                .writeTimeout(5000, TimeUnit.MILLISECONDS)
-                .build();
-        String url = TextUtils.isEmpty(baseUrl) ? DEFAULT_URL : baseUrl;
-        retrofit = new Retrofit.Builder()
-                .baseUrl(url)
-                .client(okHttpClient)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
+    fun initRetrofit(baseUrl: String?) {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+        val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .connectTimeout(5000, TimeUnit.MILLISECONDS)
+            .readTimeout(5000, TimeUnit.MILLISECONDS)
+            .writeTimeout(5000, TimeUnit.MILLISECONDS)
+            .build()
+        val url = if (TextUtils.isEmpty(baseUrl)) DEFAULT_URL else baseUrl!!
+        retrofit = Retrofit.Builder()
+            .baseUrl(url)
+            .client(okHttpClient)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
     }
-
-    public Retrofit getRetrofit() {
-        if (retrofit != null) {
-            return retrofit;
-        } else {
-            throw new NullPointerException("retrofit is null, please invoke initRetrofit() method before call getRetrofit()");
-        }
-    }
-
 }

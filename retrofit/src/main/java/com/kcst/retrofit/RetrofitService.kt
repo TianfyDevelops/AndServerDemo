@@ -1,23 +1,27 @@
-package com.kcst.retrofit;
+package com.kcst.retrofit
 
-import java.util.Map;
+import retrofit2.Call
+import retrofit2.http.FieldMap
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.HeaderMap
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.QueryMap
 
-import retrofit2.Call;
-import retrofit2.http.FieldMap;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.HeaderMap;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
-
-public interface RetrofitService {
-
+interface RetrofitService {
     @GET("{path}")
-    Call<String> get(@HeaderMap Map<String, String> headers, @Path(value = "path", encoded = true) String path, @QueryMap Map<String, String> map);
+    operator fun get(
+        @HeaderMap headers: Map<String, String>?,
+        @Path(value = "path", encoded = true) path: String?,
+        @QueryMap map: Map<String, String>
+    ): Call<String?>
 
     @FormUrlEncoded
     @POST("{path}")
-    Call<String> post(@HeaderMap Map<String, String> headers,@Path(value = "path", encoded = true) String path, @FieldMap Map<String, String> map);
-
+    fun post(
+        @HeaderMap headers: Map<String?, String?>?,
+        @Path(value = "path", encoded = true) path: String?,
+        @FieldMap map: Map<String?, String?>?
+    ): Call<String?>
 }
