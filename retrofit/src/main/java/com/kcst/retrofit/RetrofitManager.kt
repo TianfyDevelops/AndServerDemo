@@ -11,7 +11,7 @@ class RetrofitManager private constructor() {
 
     companion object {
         val INSTANCE = SingleHolder.holder
-        const val DEFAULT_URL="192.168.1.122"
+        const val DEFAULT_URL="http://192.168.1.122:8080/"
     }
 
     private object SingleHolder {

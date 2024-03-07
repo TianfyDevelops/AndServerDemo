@@ -40,24 +40,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         findViewById<View>(R.id.btn_get_user_info).setOnClickListener(this)
         findViewById<View>(R.id.btn_set_user_info).setOnClickListener(this)
         findViewById<View>(R.id.btn_get_user_infos).setOnClickListener(this)
-        initRetrofit()
     }
-    fun initRetrofit() {
-        val httpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.setLevel(okhttp3.logging.HttpLoggingInterceptor.Level.BODY)
-        val okHttpClient: OkHttpClient = OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
-            .connectTimeout(5000, TimeUnit.MILLISECONDS)
-            .readTimeout(5000, TimeUnit.MILLISECONDS)
-            .writeTimeout(5000, TimeUnit.MILLISECONDS)
-            .build()
-        retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.89:8080/")
-            .client(okHttpClient)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-    }
-
     private fun bindServer() {
         bindService(Intent(this, MyService::class.java), object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName, service: IBinder) {
@@ -74,24 +57,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         when (v.id) {
             R.id.btn_get_user_info -> {
                 viewModel.getUserInfo()
-//                val testRetrofitService = retrofit.create(TestRetrofitService::class.java)
-//                CoroutineScope(SupervisorJob()+Dispatchers.IO).launch{
-//                    val response = testRetrofitService.userInfo.execute()
-//                    if (response.isSuccessful){
-//
-//
-//
-//                    }
-//                }
-
-
             }
 
             R.id.btn_set_user_info -> {
                 viewModel.setUserInfo()
             }
             R.id.btn_get_user_infos->{
-                viewModel.getUserInfos()
+//                viewModel.getUserInfos()
 
             }
         }

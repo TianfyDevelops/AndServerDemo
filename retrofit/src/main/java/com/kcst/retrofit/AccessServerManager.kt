@@ -11,19 +11,16 @@ class AccessServerManager private constructor() {
 
     private val gson = Gson()
 
-    suspend fun <R,T> request(
-        baseRequest: BaseRequest<R>,
-        baseResponse: BaseResponse<T>
-    ): T? {
+    suspend fun <T : BaseResponse<*>> request(
+        baseRequest: BaseRequest,
+        responseClazz: Class<T>,
+        ): T {
         val requestHandler: RequestHandler = when (baseRequest.getRequestType()) {
             BaseRequest.RequestType.GET -> GetRequestHandler()
             BaseRequest.RequestType.POST -> PostRequestHandler()
-            else -> {
-                GetRequestHandler()
-            }
         }
         return withContext(Dispatchers.IO) {
-            requestHandler.requestHandler(retrofitService, baseRequest, baseResponse, gson)
+            requestHandler.requestHandler(retrofitService, baseRequest, responseClazz)
         }
     }
 

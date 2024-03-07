@@ -4,10 +4,9 @@ import com.google.gson.Gson
 import java.lang.reflect.InvocationTargetException
 
 interface RequestHandler {
-    fun <R,T> requestHandler(
+    suspend fun <T : BaseResponse<*>> requestHandler(
         retrofitService: RetrofitService,
-        baseRequest: BaseRequest<R>,
-        baseResponse: BaseResponse<T>,
-        gson: Gson?
-    ): T?
+        baseRequest: BaseRequest,
+        responseClazz: Class<T>,
+    ): T
 }

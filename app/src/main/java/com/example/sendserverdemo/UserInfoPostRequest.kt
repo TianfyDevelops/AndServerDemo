@@ -7,16 +7,12 @@ import com.kcst.retrofit.BaseRequest
  * @Date
  *
  */
-class UserInfoRequest : BaseRequest<UserInfoParams>() {
+class UserInfoPostRequest(var mUserId: Int, var mUserName: String) : BaseRequest() {
     override fun getRequestType(): RequestType {
-        return RequestType.GET
+        return RequestType.POST
     }
 
     override fun getPath(): String {
-        return "/user/userInfos"
-    }
-
-    override fun getRequestData(): UserInfoParams? {
-        return null
+        return "/user/userInfo"
     }
 }

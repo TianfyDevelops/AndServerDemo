@@ -13,15 +13,15 @@ interface RetrofitService {
     @GET("{path}")
     operator fun get(
         @HeaderMap headers: Map<String, String>?,
-        @Path(value = "path", encoded = true) path: String?,
+        @Path(value = "path", encoded = true) path: String,
         @QueryMap map: Map<String, String>
-    ): Call<String?>
+    ): Call<String>
 
     @FormUrlEncoded
     @POST("{path}")
     fun post(
-        @HeaderMap headers: Map<String?, String?>?,
-        @Path(value = "path", encoded = true) path: String?,
-        @FieldMap map: Map<String?, String?>?
-    ): Call<String?>
+        @HeaderMap headers: Map<String, String>?,
+        @Path(value = "path", encoded = true) path: String,
+        @FieldMap map: Map<String, String>
+    ): Call<String>
 }
