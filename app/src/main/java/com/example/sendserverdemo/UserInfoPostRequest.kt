@@ -1,6 +1,6 @@
 package com.example.sendserverdemo
 
-import com.kcst.retrofit.BaseRequest
+import com.kcst.retrofit.base.BaseRequest
 
 /**
  * @Author tianfy

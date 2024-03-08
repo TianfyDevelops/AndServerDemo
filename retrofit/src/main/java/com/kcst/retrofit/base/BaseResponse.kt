@@ -1,4 +1,4 @@
-package com.kcst.retrofit
+package com.kcst.retrofit.base
 
 abstract class BaseResponse<T> {
     var isSuccess = false

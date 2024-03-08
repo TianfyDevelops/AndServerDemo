@@ -1,7 +1,8 @@
-package com.kcst.retrofit
+package com.kcst.retrofit.handler
 
-import com.google.gson.Gson
-import java.lang.reflect.InvocationTargetException
+import com.kcst.retrofit.net.RetrofitService
+import com.kcst.retrofit.base.BaseRequest
+import com.kcst.retrofit.base.BaseResponse
 
 interface RequestHandler {
     suspend fun <T : BaseResponse<*>> requestHandler(

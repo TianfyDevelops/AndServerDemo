@@ -1,14 +1,15 @@
-package com.kcst.retrofit
+package com.kcst.retrofit.handler
 
-import android.text.TextUtils
-import com.google.gson.Gson
-import java.lang.NullPointerException
-import kotlin.reflect.KType
-import kotlin.reflect.full.declaredFunctions
+import com.kcst.retrofit.GsonUtil
+import com.kcst.retrofit.net.RetrofitService
+import com.kcst.retrofit.base.BaseRequest
+import com.kcst.retrofit.base.BaseResponse
+import com.kcst.retrofit.getRawType
+import java.lang.reflect.ParameterizedType
 import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.jvm.javaType
+import kotlin.reflect.jvm.isAccessible
 
-class GetRequestHandler : RequestHandler {
+class PostRequestHandler : RequestHandler {
     override suspend fun <T : BaseResponse<*>> requestHandler(
         retrofitService: RetrofitService,
         baseRequest: BaseRequest,
@@ -22,13 +23,18 @@ class GetRequestHandler : RequestHandler {
         val requestParams = mutableMapOf<String, String>()
         val requestKClass = baseRequest::class
         requestKClass.declaredMemberProperties.forEach {
-            if (!TextUtils.isEmpty(it.call(baseRequest).toString()))
-                requestParams[it.name] = it.call(baseRequest).toString()
+            it.isAccessible = true
+            requestParams[it.name] = it.call(baseRequest).toString()
         }
-        var response: T = responseClazz.newInstance()
+        val genericSuperclass = responseClazz.genericSuperclass
+        val parameterizedType = genericSuperclass as ParameterizedType
+        val type = parameterizedType.actualTypeArguments[0]
+        val constructor = responseClazz.getDeclaredConstructor(getRawType(type))
+        constructor.isAccessible = true
+        var response: T = constructor.newInstance(null)
         try {
             val call =
-                retrofitService[baseRequest.headers, baseRequest.getPath(), requestParams]
+                retrofitService.post(baseRequest.headers, baseRequest.getPath(), requestParams)
             val strResponse = call.execute()
             if (strResponse.isSuccessful) {
                 response =
@@ -45,4 +51,5 @@ class GetRequestHandler : RequestHandler {
         }
         return response
     }
+
 }

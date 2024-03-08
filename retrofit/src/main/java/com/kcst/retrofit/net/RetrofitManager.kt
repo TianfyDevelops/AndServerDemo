@@ -1,4 +1,4 @@
-package com.kcst.retrofit
+package com.kcst.retrofit.net
 
 import android.text.TextUtils
 import okhttp3.OkHttpClient

@@ -1,4 +1,4 @@
-package com.kcst.retrofit
+package com.kcst.retrofit.base
 
 abstract class BaseRequest {
     var headers: Map<String, String>? = null

@@ -7,4 +7,4 @@ import com.kcst.retrofit.base.BaseResponse
  * @Date
  *
  */
-class UserInfoResponse constructor(override var data: UserInfo?) : BaseResponse<UserInfo>()
+class UserInfoListResponse(override var data: List<UserInfo>?) : BaseResponse<List<UserInfo>>()

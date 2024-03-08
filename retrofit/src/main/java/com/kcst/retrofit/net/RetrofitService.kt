@@ -1,4 +1,4 @@
-package com.kcst.retrofit
+package com.kcst.retrofit.net
 
 import retrofit2.Call
 import retrofit2.http.FieldMap

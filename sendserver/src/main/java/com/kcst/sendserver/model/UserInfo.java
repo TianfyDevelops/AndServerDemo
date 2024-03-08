@@ -33,7 +33,7 @@ public class UserInfo implements Parcelable {
 
 
     @JSONField(name = "id")
-    @PrimaryKey()
+    @PrimaryKey(autoGenerate = true)
     private int id = 1;
     @JSONField(name = "mUserId")
     @ColumnInfo

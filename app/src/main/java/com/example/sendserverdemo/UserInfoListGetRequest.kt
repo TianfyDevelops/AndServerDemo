@@ -7,12 +7,12 @@ import com.kcst.retrofit.base.BaseRequest
  * @Date
  *
  */
-class UserInfoGetRequest(val mUserId: Int) : BaseRequest() {
+class UserInfoListGetRequest() : BaseRequest() {
     override fun getRequestType(): RequestType {
         return RequestType.GET
     }
 
     override fun getPath(): String {
-        return "/user/userInfo"
+        return "/user/userInfos"
     }
 }

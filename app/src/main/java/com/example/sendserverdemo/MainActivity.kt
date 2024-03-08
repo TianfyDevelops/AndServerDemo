@@ -6,26 +6,11 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.kcst.retrofit.RetrofitManager
-import com.kcst.sendserver.model.UserInfo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val TAG = "MainActivity"
@@ -63,8 +48,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 viewModel.setUserInfo()
             }
             R.id.btn_get_user_infos->{
-//                viewModel.getUserInfos()
-
+                viewModel.getUserInfos()
             }
         }
     }

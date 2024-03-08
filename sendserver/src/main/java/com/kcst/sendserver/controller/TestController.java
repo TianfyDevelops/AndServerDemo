@@ -59,19 +59,18 @@ class TestController {
 
 
     @GetMapping(path = "/userInfo", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    UserInfo userInfo() {
+    UserInfo userInfo(@RequestParam("mUserId") String userId) {
         return ExecutorManager.getInstance().submit(() -> RoomManager
                 .getInstance()
                 .getAppDatabase()
                 .getUserDao()
-                .getUserForId("123"));
+                .getUserForId(userId));
     }
 
     @PostMapping(path = "/userInfo", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     void setUserInfo(@RequestParam("mUserId") String userId, @RequestParam("mUserName") String userName) {
         ExecutorManager.getInstance().submit(() -> {
             UserInfo userInfo = new UserInfo();
-            userInfo.setId(1);
             userInfo.setUserId(userId);
             userInfo.setUserName(userName);
             RoomManager.getInstance().getAppDatabase().getUserDao().upDateUser(userInfo);
@@ -80,10 +79,11 @@ class TestController {
 
     @GetMapping(path = "/userInfos", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     List<UserInfo> getUserInfos() {
-        ArrayList<UserInfo> objects = new ArrayList<>();
-        objects.add(new UserInfo(1, "1", "1"));
-        objects.add(new UserInfo(2, "2", "2"));
-        return objects;
+        return ExecutorManager.getInstance().submit(() -> RoomManager
+                .getInstance()
+                .getAppDatabase()
+                .getUserDao()
+                .getAllUser());
     }
 
 
