@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'maven-publish'
 }
 
 android {
@@ -8,6 +9,11 @@ android {
     compileSdk 33
 
     defaultConfig {
+        aarMetadata {
+            minSdk(24)
+        }
+
+
         minSdk 24
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -27,7 +33,32 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    publishing{
+        singleVariant("release")
+        singleVariant("debug")
+    }
 }
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.kcst'
+            artifactId = 'retrofit'
+            version = '1.0'
+            afterEvaluate {
+                from components.release
+            }
+        }
+        debug(MavenPublication) {
+            groupId = 'com.kcst'
+            artifactId = 'retrofit'
+            version = '1.0'
+            afterEvaluate {
+                from components.debug
+            }
+        }
+    }
+}
+
 
 dependencies {
 
