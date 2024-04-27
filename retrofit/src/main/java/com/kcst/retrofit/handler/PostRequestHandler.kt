@@ -6,6 +6,7 @@ import com.kcst.retrofit.net.RetrofitService
 import com.kcst.retrofit.base.BaseRequest
 import com.kcst.retrofit.base.BaseResponse
 import com.kcst.retrofit.getRawType
+import java.lang.NullPointerException
 import java.lang.reflect.ParameterizedType
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -27,17 +28,14 @@ class PostRequestHandler : RequestHandler {
             it.isAccessible = true
             requestParams[it.name] = it.call(baseRequest).toString()
         }
-        val genericSuperclass = responseClazz.genericSuperclass
-        val parameterizedType = genericSuperclass as ParameterizedType
-        val type = parameterizedType.actualTypeArguments[0]
-        val rawType = getRawType(type)!!
         try {
             val call =
                 retrofitService.post(baseRequest.headers, baseRequest.getPath(), requestParams)
             val strResponse = call.execute()
             if (strResponse.isSuccessful) {
                 val response =
-                    GsonUtil.fromJson<T>(strResponse.body(), rawType)
+                    GsonUtil.fromJson<T>(strResponse.body(), responseClazz)
+                        ?: return Result.failure(NullPointerException("response is null fail exception"))
                 return Result.success(response)
             } else {
                 return Result.failure(NetworkErrorException("request fail exception"))

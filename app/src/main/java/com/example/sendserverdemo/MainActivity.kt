@@ -15,11 +15,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.sendserverdemo.viewmodel.MainViewModel
 import com.example.sendserverdemo.viewmodel.MainViewModelFactory
+import kotlinx.coroutines.CoroutineScope
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-    companion object{
+    companion object {
         const val TAG = "MainActivity"
     }
+
     private lateinit var viewModel: MainViewModel
 
     @SuppressLint("MissingInflatedId")
@@ -31,7 +33,45 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         findViewById<View>(R.id.btn_get_user_info).setOnClickListener(this)
         findViewById<View>(R.id.btn_set_user_info).setOnClickListener(this)
         findViewById<View>(R.id.btn_get_user_infos).setOnClickListener(this)
+
+        launchOnStart {
+            viewModel.userInfoFlow.collect {
+                if (it.isSuccess) {
+                    Log.d(TAG, "getUserInfo:${it.getOrNull()}")
+                } else {
+                    Log.d(TAG, "getUserInfo:请求失败")
+                }
+            }
+        }
+        launchOnStart {
+            viewModel.userInfoListFlow.collect {
+                if (it.isSuccess) {
+                    Log.d(TAG, "userInfoListFlow:${it.getOrNull()}")
+                } else {
+                    Log.d(TAG, "userInfoListFlow:请求失败 ${it.exceptionOrNull()?.message}")
+                }
+            }
+        }
+        launchOnStart {
+            viewModel.setUserInfoFlow.collect {
+                if (it.isSuccess) {
+                    Log.d(TAG, "setUserInfoFlow:${it.getOrNull()}")
+                } else {
+                    Log.d(TAG, "setUserInfoFlow:请求失败")
+                }
+            }
+        }
     }
+
+
+    private fun launchOnStart(block: suspend CoroutineScope.() -> Unit) {
+        lifecycleScope.launchWhenStarted {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                block.invoke(this)
+            }
+        }
+    }
+
 
     private fun bindServer() {
         bindService(Intent(this, MyService::class.java), object : ServiceConnection {
@@ -48,59 +88,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.btn_get_user_info -> {
-                getUserInfo()
+                viewModel.getUserInfo()
             }
 
             R.id.btn_set_user_info -> {
-                setUserInfo()
+                viewModel.setUserInfo()
             }
 
             R.id.btn_get_user_infos -> {
-                getUserInfoList()
+                viewModel.getUserInfoList()
             }
         }
     }
 
-    private fun getUserInfoList() {
-        lifecycleScope.launchWhenCreated {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.getUserInfoList().collect {
-                    if (it.isSuccess){
-                        Log.d(TAG,"userInfoList:${it.getOrNull()}")
-                    }else{
-                        Log.d(TAG,"userInfoList:请求失败")
-                    }
-                }
-            }
-        }
-    }
-
-    private fun setUserInfo() {
-        lifecycleScope.launchWhenCreated {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.setUserInfo().collect {
-                    if (it.isSuccess) {
-                        Log.d(TAG,"setUserInfo:${it.getOrNull()}")
-                    } else {
-                        Log.d(TAG,"setUserInfo:请求失败")
-                    }
-                }
-            }
-        }
-    }
-
-    private fun getUserInfo() {
-        lifecycleScope.launchWhenCreated {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.getUserInfo().collect {
-                    if (it.isSuccess) {
-                        Log.d(TAG,"getUserInfo:${it.getOrNull()}")
-                    } else {
-                        Log.d(TAG,"getUserInfo:请求失败")
-                    }
-                }
-            }
-        }
-    }
 
 }

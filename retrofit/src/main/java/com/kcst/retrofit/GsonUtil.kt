@@ -10,7 +10,7 @@ import java.lang.reflect.Type
  */
 object GsonUtil {
     private val gson = Gson()
-    fun <T> fromJson(json: String?, typeOfT: Type): T {
+    fun <T> fromJson(json: String?, typeOfT: Type): T? {
         return gson.fromJson(json, typeOfT)
     }
 
