@@ -9,5 +9,5 @@ interface RequestHandler {
         retrofitService: RetrofitService,
         baseRequest: BaseRequest,
         responseClazz: Class<T>,
-    ): T
+    ): Result<T>
 }

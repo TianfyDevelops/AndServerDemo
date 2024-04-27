@@ -1,4 +1,4 @@
-package com.example.sendserverdemo
+package com.example.sendserverdemo.response
 
 data class UserInfo constructor(
     val id: Int = 1,

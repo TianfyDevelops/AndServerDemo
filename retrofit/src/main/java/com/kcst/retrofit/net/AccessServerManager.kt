@@ -1,6 +1,5 @@
 package com.kcst.retrofit.net
 
-import com.google.gson.Gson
 import com.kcst.retrofit.base.BaseRequest
 import com.kcst.retrofit.base.BaseResponse
 import com.kcst.retrofit.handler.GetRequestHandler
@@ -14,12 +13,10 @@ class AccessServerManager private constructor() {
     private val retrofitService: RetrofitService =
         RetrofitManager.INSTANCE.retrofit.create(RetrofitService::class.java)
 
-    private val gson = Gson()
-
     suspend fun <T : BaseResponse<*>> request(
         baseRequest: BaseRequest,
         responseClazz: Class<T>,
-        ): T {
+        ): Result<T> {
         val requestHandler: RequestHandler = when (baseRequest.getRequestType()) {
             BaseRequest.RequestType.GET -> GetRequestHandler()
             BaseRequest.RequestType.POST -> PostRequestHandler()

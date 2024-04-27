@@ -1,5 +1,6 @@
 package com.kcst.retrofit.handler
 
+import android.accounts.NetworkErrorException
 import com.kcst.retrofit.GsonUtil
 import com.kcst.retrofit.net.RetrofitService
 import com.kcst.retrofit.base.BaseRequest
@@ -14,7 +15,7 @@ class PostRequestHandler : RequestHandler {
         retrofitService: RetrofitService,
         baseRequest: BaseRequest,
         responseClazz: Class<T>,
-    ): T {
+    ): Result<T> {
         if (baseRequest.headers == null) {
             baseRequest.headers = mutableMapOf<String, String>().apply {
                 put("Content-Type", "application/x-www-form-urlencoded")
@@ -29,27 +30,21 @@ class PostRequestHandler : RequestHandler {
         val genericSuperclass = responseClazz.genericSuperclass
         val parameterizedType = genericSuperclass as ParameterizedType
         val type = parameterizedType.actualTypeArguments[0]
-        val constructor = responseClazz.getDeclaredConstructor(getRawType(type))
-        constructor.isAccessible = true
-        var response: T = constructor.newInstance(null)
+        val rawType = getRawType(type)!!
         try {
             val call =
                 retrofitService.post(baseRequest.headers, baseRequest.getPath(), requestParams)
             val strResponse = call.execute()
             if (strResponse.isSuccessful) {
-                response =
-                    GsonUtil.fromJson(strResponse.body()!!, responseClazz)
+                val response =
+                    GsonUtil.fromJson<T>(strResponse.body(), rawType)
+                return Result.success(response)
             } else {
-                response.isSuccess = false
-                response.errorCode = strResponse.code()
-                response.errorMsg = strResponse.message()
+                return Result.failure(NetworkErrorException("request fail exception"))
             }
         } catch (e: Exception) {
-            response.isSuccess = false
-            response.errorCode = 501
-            response.errorMsg = e.message
+            return Result.failure(e)
         }
-        return response
     }
 
 }

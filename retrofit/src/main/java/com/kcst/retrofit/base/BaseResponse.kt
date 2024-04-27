@@ -1,5 +1,7 @@
 package com.kcst.retrofit.base
 
+import kotlin.Result
+
 abstract class BaseResponse<T> {
     var isSuccess = false
     var errorCode = 0

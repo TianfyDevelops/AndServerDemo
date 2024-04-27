@@ -1,4 +1,4 @@
-package com.example.sendserverdemo
+package com.example.sendserverdemo.request
 
 import com.kcst.retrofit.base.BaseRequest
 
